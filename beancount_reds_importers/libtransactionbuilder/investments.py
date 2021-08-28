@@ -293,6 +293,10 @@ class Importer(importer.ImporterProtocol):
         if available_cash is not False:
             try:
                 balance = self.get_available_cash() - settlement_fund_balance
+                if self.ofx_account.statement.margin_balance is not False:
+                    balance += self.ofx_account.statement.margin_balance
+                if self.ofx_account.statement.short_balance is not False:
+                    balance += self.ofx_account.statement.short_balance
                 meta = data.new_metadata(file.name, next(counter))
                 bal_date = date if date else self.file_date(file).date()
                 balance_entry = data.Balance(meta, bal_date, self.cash_account,
